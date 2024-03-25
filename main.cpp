@@ -9,7 +9,7 @@ using namespace std;
 
 vector<info> books;
 vector<logs> adminlist;
-int log_num;
+int log_num, access, admin;
 
 int Login();
 void View();
@@ -22,42 +22,86 @@ void Settings();
 int main(){
     struct logs log_temp;
     struct info book_temp;
-    int num = 0, admin;
+    int num = 0, status = 1;
+    string name;
     char op;
     log(adminlist);
     book(books);
-    if(adminlist.size() != 0) admin = Login();
-    else admin = 1;
-    while(admin == 1){
+    while(status){
         cout << "\n=============================\n";
-        cout << "LIBRARY MANAGEMENT SYSTEM\nWelcome back "<< adminlist[log_num].user << "! What would you like to do?\n";
-        cout << "1.| View Collections\n2.| Add Book\n3.| Delete Book\n4.| Search Book\n5.| Edit Book\n6.| Settings\n7.| Exit\n\n- ";
+        cout << "Log in as : \n1.| Admin\n2.| Guest\n3.| Exit\n\n- ";
         op = getchar();
         cin.sync();
         switch(op){
             case '1':
-                View();
+                if(adminlist.size() != 0){
+                    admin = Login();
+                    name = adminlist[log_num].user;
+                }
+                else{
+                    admin = 1;
+                    name = "Admin";
+                }
                 break;
             case '2':
-                Add();
+                access = 1;
+                name = "Guest";
                 break;
             case '3':
-                Del();
-                break;
-            case '4':
-                Search();
-                break;
-            case '5':
-                Edit();
-                break;
-            case '6':
-                Settings();
-                break;
-            case '7':
-                cout << "\nExiting...";
-                return 0;
-            default:
-                cout << "\nOption is invalid!\n";
+                cout << "Exiting...\n";
+                status = 0;
+        }
+        while(access == 1 || admin == 1){
+            cout << "\n=============================\n";
+            cout << "LIBRARY MANAGEMENT SYSTEM\nWelcome back "<< name << "! What would you like to do?\n";
+            if(admin){
+                cout << "1.| View Collections\n2.| Add Book\n3.| Delete Book\n4.| Search Book\n5.| Edit Book\n6.| Settings\n7.| Exit\n\n- ";
+                op = getchar();
+                cin.sync();
+                switch(op){
+                    case '1':
+                        View();
+                        break;
+                    case '2':
+                        Add();
+                        break;
+                    case '3':
+                        Del();
+                        break;
+                    case '4':
+                        Search();
+                        break;
+                    case '5':
+                        Edit();
+                        break;
+                    case '6':
+                        Settings();
+                        break;
+                    case '7':
+                        cout << "\nExiting...";
+                        return 0;
+                    default:
+                        cout << "\nOption is invalid!\n";
+                }
+            }
+            else{
+                cout << "1.| View Collections\n2.| Search Book\n3.| Exit\n\n- ";
+                op = getchar();
+                cin.sync();
+                switch(op){
+                    case '1':
+                        View();
+                        break;
+                    case '2':
+                        Search();
+                        break;
+                    case '3':
+                        cout << "\nExiting...";
+                        return 0;
+                    default:
+                        cout << "\nOption is invalid!\n";
+                }
+            }
         }
     }
     return 0;
@@ -68,7 +112,7 @@ int Login(){
     while(1){
         log_num = 0;
         cout << "=============================\n";
-        cout << "||LOGIN||\n[Enter 0 to exit]\nUSERNAME : ";
+        cout << "[LOGIN]\n|Enter 0 to exit|\nUSERNAME : ";
         getline(cin, input.user);
         if(input.user == "0") return 0;
         cout << "PASSWORD : ";
@@ -103,42 +147,42 @@ void View(){
 }
 
 void Add(){
-    struct info book_temp;
-    string title, author, date, day, month, year;
-    cout << "=============================\n";
-    cout << "Title\t: ";
-    getline(cin, title);
-    cin.sync();
-    cout << "Author\t: ";
-    getline(cin, author);
-    cin.sync();
-    cout << "Publish\t| Day   : ";
-    cin >> day;
-    cin.sync();
-    cout << "\t| Month : ";
-    cin >> month;
-    cin.sync();
-    cout << "\t| Year  : ";
-    cin >> year;
-    cin.sync();
-    try{
-        if(Digit(day) && Digit(month) && Digit(year)){
-            if(0 < stoi(day) || stoi(day) <= 31){
-                if(0 < stoi(month) || stoi(month) <= 12){
-                    if(0 < stoi(year)){
-                        date = day + "/" + month + "/" + year;
-                        book_temp = {title, author, date};
-                        books.push_back(book_temp);
-                        BookTransfer(books);
-                        cout << "\nBook successfully added!\n";
+        struct info book_temp;
+        string title, author, date, day, month, year;
+        cout << "=============================\n";
+        cout << "Title\t: ";
+        getline(cin, title);
+        cin.sync();
+        cout << "Author\t: ";
+        getline(cin, author);
+        cin.sync();
+        cout << "Publish\t| Day   : ";
+        cin >> day;
+        cin.sync();
+        cout << "\t| Month : ";
+        cin >> month;
+        cin.sync();
+        cout << "\t| Year  : ";
+        cin >> year;
+        cin.sync();
+        try{
+            if(Digit(day) && Digit(month) && Digit(year)){
+                if(0 < stoi(day) || stoi(day) <= 31){
+                    if(0 < stoi(month) || stoi(month) <= 12){
+                        if(0 < stoi(year)){
+                            date = day + "/" + month + "/" + year;
+                            book_temp = {title, author, date};
+                            books.push_back(book_temp);
+                            BookTransfer(books);
+                            cout << "\nBook successfully added!\n";
+                        } else throw 0;
                     } else throw 0;
                 } else throw 0;
             } else throw 0;
-        } else throw 0;
-    }
-    catch(...){
-        cout << "\nInvalid Date!\n";
-    }
+        }
+        catch(...){
+            cout << "\nInvalid Date!\n";
+        }
 }
 
 void Del(){
@@ -262,34 +306,70 @@ void Edit(){
 }
 
 void Settings(){
-    string newpass;
-    char op;
-    while(op != '3'){
-        cout << "=============================\n";
-        cout << "1.|View Username/Password\n2.|Change Password\n3.|Back\n\n-";
+    struct logs new_log;
+    string newuser, newpass;
+    char op, del;
+    while(op != '5'){
+        cout << "=============================\n[SETTINGS]\n";
+        cout << "1.|View Username/Password\n2.|Change Password\n3.|Create New Account\n4.|Delete Account\n5.|Back\n\n-";
         op = getchar();
         cin.sync();
         switch(op){
             case '1':
-                cout << "=============================\n";
-                cout << "Username : " << adminlist[log_num].user << endl;
-                cout << "Password : " << adminlist[log_num].pass << endl;
-                cout << "\nPress enter to go back!";
-                getchar();
-                cin.sync();
-                break;
+                if(adminlist.size() != 0){
+                    cout << "=============================\n";
+                    cout << "Username : " << adminlist[log_num].user << endl;
+                    cout << "Password : " << adminlist[log_num].pass << endl;
+                    cout << "\nPress enter to go back!";
+                    getchar();
+                    cin.sync();
+                    break;
+                } else cout << "\nYou don't have an account!\n";
             case '2':
-                cout << "=============================\n";
-                cout << "Enter your new password : ";
-                getline(cin, newpass);
-                cin.sync();
-                if(newpass == ""){
-                    adminlist[log_num].pass = newpass;
-                    LogTransfer(adminlist);
-                    cout << "\nChange successful!\n";
-                }
+                if(adminlist.size() != 0){
+                    cout << "=============================\n";
+                    cout << "Enter your new password : ";
+                    getline(cin, newpass);
+                    cin.sync();
+                    if(newpass == ""){
+                        adminlist[log_num].pass = newpass;
+                        LogTransfer(adminlist);
+                        cout << "\nChange successful!\n";
+                    }
+                } else cout << "\nYou don't have an account!\n";
                 break;
             case '3':
+                cout << "=============================\n";
+                cout << "Insert the new username : ";
+                getline(cin, newuser);
+                cin.sync();
+                cout << "Insert the new password : ";
+                getline(cin, newpass);
+                cin.sync();
+                if(newuser != "" && newpass != ""){
+                    new_log = {newuser,newpass};
+                    adminlist.push_back(new_log);
+                    LogTransfer(adminlist);
+                    cout << "\nAccount Created!\n";
+                }
+                else cout << "\nUsername/Password cannot be empty!\n";
+                break;
+            case '4':
+                if(adminlist.size() != 0){
+                    cout << "=============================\n";
+                    cout << "Are you sure you want to delete this account? y/n\n\n-";
+                    del = getchar();
+                    cin.sync();
+                    if(del == 'y'){
+                        adminlist.erase(adminlist.begin() + log_num);
+                        LogTransfer(adminlist);
+                        access = 0;
+                        op = '5';
+                        cout << "\nAccount successfully deleted!\n";
+                    }
+                } else cout << "\nYou don't have an account!\n";
+                    break;
+            case '5':
                 break;
             default:
                 cout << "\nOption is invalid!\n";
