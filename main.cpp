@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 #include <fstream>
 #include <vector>
 #include <string>
@@ -22,16 +23,15 @@ void Settings();
 int main(){
     struct logs log_temp;
     struct info book_temp;
-    int num = 0, status = 1;
     string name;
     char op;
     log(adminlist);
     book(books);
-    while(status){
+    while(1){
         cout << "\n=============================\n";
         cout << "Log in as : \n1.| Admin\n2.| Guest\n3.| Exit\n\n- ";
         op = getchar();
-        cin.sync();
+        cin.ignore(100000, '\n');
         switch(op){
             case '1':
                 if(adminlist.size() != 0){
@@ -49,7 +49,7 @@ int main(){
                 break;
             case '3':
                 cout << "Exiting...\n";
-                status = 0;
+                return 0;
         }
         while(access == 1 || admin == 1){
             cout << "\n=============================\n";
@@ -57,7 +57,7 @@ int main(){
             if(admin){
                 cout << "1.| View Collections\n2.| Add Book\n3.| Delete Book\n4.| Search Book\n5.| Edit Book\n6.| Settings\n7.| Exit\n\n- ";
                 op = getchar();
-                cin.sync();
+                cin.ignore(100000, '\n');
                 switch(op){
                     case '1':
                         View();
@@ -87,7 +87,7 @@ int main(){
             else{
                 cout << "1.| View Collections\n2.| Search Book\n3.| Exit\n\n- ";
                 op = getchar();
-                cin.sync();
+                cin.ignore(100000, '\n');
                 switch(op){
                     case '1':
                         View();
@@ -114,9 +114,11 @@ int Login(){
         cout << "=============================\n";
         cout << "[LOGIN]\n|Enter 0 to exit|\nUSERNAME : ";
         getline(cin, input.user);
+        cin.sync();
         if(input.user == "0") return 0;
         cout << "PASSWORD : ";
         getline(cin, input.pass);
+        cin.sync();
         for(auto& i : adminlist){
             if(input.user == i.user && input.pass == i.pass){
                 cout << "\nLogin successful!\n";
@@ -143,7 +145,7 @@ void View(){
     }
     cout << "\nPress enter to go back!";
     getchar();
-    cin.sync();
+    cin.ignore(100000, '\n');
 }
 
 void Add(){
@@ -161,10 +163,10 @@ void Add(){
         cin.sync();
         cout << "\t| Month : ";
         cin >> month;
-        cin.sync();
+        cin.ignore(100000, '\n');
         cout << "\t| Year  : ";
         cin >> year;
-        cin.sync();
+        cin.ignore(100000, '\n');
         try{
             if(Digit(day) && Digit(month) && Digit(year)){
                 if(0 < stoi(day) || stoi(day) <= 31){
@@ -190,7 +192,7 @@ void Del(){
     cout << "=============================\n";
     cout << "Enter the book number you want to erase : ";
     cin >> num;
-    cin.sync();
+    cin.ignore(100000, '\n');
     if(0 < num && books.begin() + num <= books.end()){
         books.erase(books.begin() + num - 1);
         BookTransfer(books);
@@ -209,13 +211,13 @@ void Search(){
         cout << "=============================\n";
         cout << "Search by : \n1.|Book Number\n2.|Keyword\n3.|Back\n\n- ";
         op = getchar();
-        cin.sync();
+        cin.ignore(100000, '\n');
         switch(op){
         case '1':
             cout << "\n=============================\n";
             cout << "Enter the book num : ";
             cin >> num;
-            cin.sync();
+            cin.ignore(100000, '\n');
             cout << endl << "   " << num << ".\t|Title\t\t: \"" << books[num-1].title << "\"\n\t|Author\t\t: " << books[num-1].author << "\n\t|Release date\t: " << books[num-1].date << "\n\n";
             break;
         case '2':   
@@ -247,14 +249,14 @@ void Edit(){
     cout << "=============================\n";
     cout << "Enter the book number you want to edit : ";
     booknum = getchar();
-    cin.sync();
+    cin.ignore(100000, '\n');
     if(isdigit(booknum)){
         int num = int(booknum - '0');
         while(op != '4'){
             cout << "=============================\n";
             cout << "Edit \"" << books[num-1].title << "\" : \n\n1.|Title\n2.|Author\n3.|Date\n4.|Exit\n\n-";
             op = getchar();
-            cin.sync();
+            cin.ignore(100000, '\n');
             switch(op){
                 case '1':
                     cout << "\nPrevious Title : \"" << books[num-1].title << "\"\n";
@@ -313,7 +315,7 @@ void Settings(){
         cout << "=============================\n[SETTINGS]\n";
         cout << "1.|View Username/Password\n2.|Change Password\n3.|Create New Account\n4.|Delete Account\n5.|Back\n\n-";
         op = getchar();
-        cin.sync();
+        cin.ignore(100000, '\n');
         switch(op){
             case '1':
                 if(adminlist.size() != 0){
@@ -322,7 +324,7 @@ void Settings(){
                     cout << "Password : " << adminlist[log_num].pass << endl;
                     cout << "\nPress enter to go back!";
                     getchar();
-                    cin.sync();
+                    cin.ignore(100000, '\n');
                     break;
                 } else cout << "\nYou don't have an account!\n";
             case '2':
@@ -359,7 +361,7 @@ void Settings(){
                     cout << "=============================\n";
                     cout << "Are you sure you want to delete this account? y/n\n\n-";
                     del = getchar();
-                    cin.sync();
+                    cin.ignore(100000, '\n');
                     if(del == 'y'){
                         adminlist.erase(adminlist.begin() + log_num);
                         LogTransfer(adminlist);
