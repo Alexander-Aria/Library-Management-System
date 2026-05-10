@@ -1,4 +1,4 @@
-# Tic Tac Toe
+# Library Management System
 
 A simple terminal-based library management system written in C++.
 
