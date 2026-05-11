@@ -8,12 +8,14 @@ A simple terminal-based library management system written in C++.
 - Login system
 - Terminal interface
 
+## Requirements
+
+- Linux
+- g++
+- Make
+
 ## Build
 
-```bash
-g++ src/main.cpp -o build/app
-```
-or
 ```bash
 make
 ```
@@ -21,9 +23,9 @@ make
 ## Run
 
 ```bash
-./build/app
+make run
 ```
 
 ## Notes
 
-Scores are stored locally in `data/`.
+For manual build and run, instructions are in `Makefile`. 
